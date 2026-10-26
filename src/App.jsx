@@ -5,8 +5,10 @@ import QuestionForm from "./components/QuestionForm";
 import QuestionList from "./components/QuestionList";
 
 function App() {
-  const [questions, setQuestions] = useState(JSON.parse(localStorage.getItem("question-list")) || [])
-console.log(questions)
+  const [questions, setQuestions] = useState(
+    JSON.parse(localStorage.getItem("questionList")) || [],
+  );
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
   return (
     <>
       <Navbar />
@@ -14,9 +16,18 @@ console.log(questions)
       <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
         <Dashboard />
 
-        <QuestionForm  questions={questions} setQuestions={setQuestions}/>
-        <QuestionList questions={questions} setQuestions={setQuestions}   />
-      
+        <QuestionForm
+          questions={questions}
+          setQuestions={setQuestions}
+          selectedQuestion={selectedQuestion}
+          setSelectedQuestion={setSelectedQuestion}
+
+        />
+        <QuestionList
+          questions={questions}
+          setQuestions={setQuestions}
+          setSelectedQuestion={setSelectedQuestion}
+        />
       </main>
     </>
   );

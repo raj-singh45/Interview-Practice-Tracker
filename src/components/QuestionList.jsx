@@ -1,12 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { Search, Code2, Pencil, Trash2 } from "lucide-react";
 import { useQuestion } from "../hooks/useQuestion";
 
-const QuestionList = ({ questions = [], setQuestions }) => {
-  const { deleteQuestionCard } = useQuestion(setQuestions, questions);
+const QuestionList = ({
+  questions = [],
+  setQuestions,
+  setSelectedQuestion,
+}) => {
+  const { deleteQuestionCard } = useQuestion(questions, setQuestions);
+  const [searchText, setSearchText] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [difficultyFilter, setDifficultyFilter] = useState("All");
 
   const inputClass =
     "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+
+  // Search questions
+  const filteredQuestions = questions.filter((question) =>
+    question.title.toLowerCase().includes(searchText.toLowerCase())&& (categoryFilter === "All" ||question.category===  categoryFilter) &&
+(statusFilter === "All" || question.status === statusFilter) &&
+(difficultyFilter === "All" ||question.difficulty===  difficultyFilter))
+
+  // Empty state message
+  const emptyMessage =
+    questions.length === 0 ? "No questions yet" : "No matching questions found";
+
+  const emptyDescription =
+    questions.length === 0
+      ? "Add your first question to start tracking your progress."
+      : "Try searching with a different question title.";
 
   return (
     <section
@@ -27,66 +50,68 @@ const QuestionList = ({ questions = [], setQuestions }) => {
         </span>
       </div>
 
-      {/* Search and Filters - UI only */}
-      <div className="mt-6 flex flex-col gap-3 lg:flex-row">
-        <div className="relative flex-1">
-          <Search
-            size={18}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-          />
-          <input
-            type="text"
-            placeholder="Search questions..."
-            className={`${inputClass} pl-11`}
-          />
-        </div>
+      {/* Search */}
+      <div className="relative mt-6">
+        <Search
+          size={18}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+        />
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:w-[540px]">
-          <select className={inputClass} defaultValue="">
-            <option value="" disabled>
-              Category
-            </option>
-            <option value="DSA">DSA</option>
-            <option value="Git">Git</option>
-            <option value="Technical">Technical</option>
-          </select>
+        <input
+          type="text"
+          placeholder="Search questions..."
+          className={`${inputClass} pl-11`}
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+      </div>
+      <div className="relative mt-6">
+        {/* filter by category */}
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+        >
+          <option value="All">All Categories</option>
+          <option value="DSA">DSA</option>
+          <option value="Git">Git</option>
+          <option value="Technical">Technical</option>
+        </select>
 
-          <select className={inputClass} defaultValue="">
-            <option value="" disabled>
-              Status
-            </option>
-            <option value="Pending">Pending</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
-          </select>
-
-          <select className={inputClass} defaultValue="">
-            <option value="" disabled>
-              Difficulty
-            </option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-          </select>
-        </div>
+{/*  filter by status */}
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="All">All Categories</option>
+          <option value="Pending">Pending</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+    
+ {/*  filter by difficulty */}
+        <select
+          value={difficultyFilter}
+          onChange={(e) => setDifficultyFilter(e.target.value)}
+        >
+          <option value="All">All Difficulties</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
       </div>
 
       {/* Questions List */}
       <div className="mt-6 space-y-3">
-        {questions.length === 0 ? (
+        {filteredQuestions.length === 0 ? (
           <div className="rounded-xl border border-dashed border-gray-300 px-4 py-10 text-center">
             <Code2 size={32} className="mx-auto text-gray-400" />
 
-            <h3 className="mt-3 font-semibold text-gray-800">
-              No questions yet
-            </h3>
+            <h3 className="mt-3 font-semibold text-gray-800">{emptyMessage}</h3>
 
-            <p className="mt-1 text-sm text-gray-500">
-              Add your first question to start tracking your progress.
-            </p>
+            <p className="mt-1 text-sm text-gray-500">{emptyDescription}</p>
           </div>
         ) : (
-          questions.map((question) => (
+          filteredQuestions.map((question) => (
             <div
               key={question.id}
               className="rounded-xl border border-gray-200 p-4 transition hover:border-blue-200 hover:shadow-sm sm:p-5"
@@ -120,7 +145,9 @@ const QuestionList = ({ questions = [], setQuestions }) => {
 
                 <div className="flex items-center gap-2">
                   <button
+                    onClick={() => setSelectedQuestion(question)}
                     type="button"
+                    aria-label="Edit question"
                     className="rounded-lg border border-gray-200 p-2.5 text-gray-500 transition hover:bg-blue-50 hover:text-blue-600"
                   >
                     <Pencil size={17} />
@@ -129,6 +156,7 @@ const QuestionList = ({ questions = [], setQuestions }) => {
                   <button
                     onClick={() => deleteQuestionCard(question.id)}
                     type="button"
+                    aria-label="Delete question"
                     className="rounded-lg border border-gray-200 p-2.5 text-gray-500 transition hover:bg-red-50 hover:text-red-600"
                   >
                     <Trash2 size={17} />
