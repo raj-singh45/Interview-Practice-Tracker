@@ -1,9 +1,26 @@
-import React from 'react'
+import { useState } from "react";
+import Navbar from "./components/Navbar";
+import Dashboard from "./components/Dashboard";
+import QuestionForm from "./components/QuestionForm";
+import QuestionList from "./components/QuestionList";
 
-const App = () => {
+function App() {
+  const [questions, setQuestions] = useState([]);
+  console.log(questions) ; 
+
   return (
-    <div>Interview practise tracker</div>
-  )
+    <>
+      <Navbar />
+
+      <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+        <Dashboard />
+
+        <QuestionForm  questions={questions} setQuestions={setQuestions}/>
+        <QuestionList questions={questions} setQuestions={setQuestions}   />
+      
+      </main>
+    </>
+  );
 }
 
-export default App
+export default App;
