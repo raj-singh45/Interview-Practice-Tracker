@@ -25,10 +25,9 @@ export const useQuestion = (setQuestions, questions)=>{
       status: data.status,
     };
     
-   setQuestions((prev) => {
-  return [...prev, newQuestion];
-});
-
+    let arr = [...questions, newQuestion] ; 
+    localStorage.setItem("questionList", JSON.stringify(arr)) ; 
+    setQuestions(arr)
     reset();
   };
 
@@ -37,9 +36,8 @@ export const useQuestion = (setQuestions, questions)=>{
         return ; 
     }
    const newList = questions.filter((question)=> question.id !== id ) ; 
-     
+    localStorage.setItem("questionList", JSON.stringify(newList));
     setQuestions(newList) ; 
-  
   }
 
   

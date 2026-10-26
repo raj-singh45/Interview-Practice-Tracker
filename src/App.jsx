@@ -5,9 +5,8 @@ import QuestionForm from "./components/QuestionForm";
 import QuestionList from "./components/QuestionList";
 
 function App() {
-  const [questions, setQuestions] = useState([]);
-  console.log(questions) ; 
-
+  const [questions, setQuestions] = useState(JSON.parse(localStorage.getItem("question-list")) || [])
+console.log(questions)
   return (
     <>
       <Navbar />
