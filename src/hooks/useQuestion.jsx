@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-export const useQuestion = ( questions,setQuestions,selectedQuestion,setSelectedQuestion) => {
+export const useQuestion = (
+  questions,
+  setQuestions,
+  selectedQuestion,
+  setSelectedQuestion,
+) => {
   const {
     register,
     handleSubmit,
@@ -16,7 +21,7 @@ export const useQuestion = ( questions,setQuestions,selectedQuestion,setSelected
     },
   });
 
-let editingIndex = selectedQuestion?.id ; 
+  let editingIndex = selectedQuestion?.id;
 
   const questionFormSubmit = (data) => {
     const newQuestion = {
@@ -28,38 +33,38 @@ let editingIndex = selectedQuestion?.id ;
     };
     //updation mode
     if (editingIndex) {
-      console.log("up strt ")
+      console.log("up strt ");
       let afterEdit = questions.map((question) => {
         return question.id === editingIndex
           ? { ...data, id: question.id }
           : question;
       });
       setQuestions(afterEdit);
-   reset({
-  title: "",
-  category: "DSA",
-  difficulty: "Easy",
-  status: "Pending",
-});
-     
+      reset({
+        title: "",
+        category: "DSA",
+        difficulty: "Easy",
+        status: "Pending",
+      });
+
       setSelectedQuestion(null);
-      
+
       localStorage.setItem("questionList", JSON.stringify(afterEdit));
-      console.log(" up end")
+      console.log(" up end");
     }
     //creation mode
     else {
-      console.log("creation hii")
+      console.log("creation hii");
       let arr = [...questions, newQuestion];
       localStorage.setItem("questionList", JSON.stringify(arr));
       setQuestions(arr);
-     reset({
-  title: "",
-  category: "DSA",
-  difficulty: "Easy",
-  status: "Pending",
-});
-      console.log("creation end")
+      reset({
+        title: "",
+        category: "DSA",
+        difficulty: "Easy",
+        status: "Pending",
+      });
+      console.log("creation end");
     }
   };
 
@@ -72,13 +77,11 @@ let editingIndex = selectedQuestion?.id ;
     setQuestions(newList);
   };
 
-
-
   return {
     register,
     handleSubmit,
     errors,
-    reset, 
+    reset,
     questionFormSubmit,
     deleteQuestionCard,
     editingIndex,

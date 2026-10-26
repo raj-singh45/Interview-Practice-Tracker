@@ -17,10 +17,13 @@ const QuestionList = ({
     "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
   // Search questions
-  const filteredQuestions = questions.filter((question) =>
-    question.title.toLowerCase().includes(searchText.toLowerCase())&& (categoryFilter === "All" ||question.category===  categoryFilter) &&
-(statusFilter === "All" || question.status === statusFilter) &&
-(difficultyFilter === "All" ||question.difficulty===  difficultyFilter))
+  const filteredQuestions = questions.filter(
+    (question) =>
+      question.title.toLowerCase().includes(searchText.toLowerCase()) &&
+      (categoryFilter === "All" || question.category === categoryFilter) &&
+      (statusFilter === "All" || question.status === statusFilter) &&
+      (difficultyFilter === "All" || question.difficulty === difficultyFilter),
+  );
 
   // Empty state message
   const emptyMessage =
@@ -77,7 +80,7 @@ const QuestionList = ({
           <option value="Technical">Technical</option>
         </select>
 
-{/*  filter by status */}
+        {/*  filter by status */}
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
@@ -87,8 +90,8 @@ const QuestionList = ({
           <option value="In Progress">In Progress</option>
           <option value="Completed">Completed</option>
         </select>
-    
- {/*  filter by difficulty */}
+
+        {/*  filter by difficulty */}
         <select
           value={difficultyFilter}
           onChange={(e) => setDifficultyFilter(e.target.value)}
